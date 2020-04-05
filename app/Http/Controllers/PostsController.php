@@ -75,9 +75,8 @@ class PostsController extends Controller
              $arr[]=$following->id;
          }
 
-        $posts=Post::all()->whereIn('userId',$arr);
+        $posts=Post::all()->whereIn('userId',$arr)->sortByDesc('updated_at');
         //return view('posts.show',compact('follower'));
-    
           return view('posts.show',compact('posts'));
     }
 
