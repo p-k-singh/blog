@@ -13,6 +13,7 @@ class Post extends Model
         'title',
         'body',
         'cover_images',
+        'userId',
     ];
     protected $hidden=['password','remember_token'];
     public function user()

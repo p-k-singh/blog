@@ -5,7 +5,7 @@ use App\Http\Requests\CreatePostRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Post;
-
+use App\User;
 class PostsController extends Controller
 {
     /**
@@ -36,8 +36,10 @@ class PostsController extends Controller
      */
     public function store(CreatePostRequest $request)
     {
+       // echo Auth::id();
         $input=$request->all();
-
+        $userId=Auth::id();
+        $input['userId']=$userId;
         if($file = $request->file('file'))
         {
              $fileNameWithExt = $request->file('file')->getClientOriginalName();
@@ -52,6 +54,7 @@ class PostsController extends Controller
             $file->move('images',$fileNameToStore);
             $input['cover_images']=$fileNameToStore;
         }
+      
         Post::create($input);
 
     }
@@ -64,7 +67,18 @@ class PostsController extends Controller
      */
     public function show($id)
     {
+        $user=User::find(Auth::id());
+          $followings=$user->following;//->select('id');
 
+         $arr=array();
+         foreach($followings as $following){
+             $arr[]=$following->id;
+         }
+
+        $posts=Post::all()->whereIn('userId',$arr);
+        //return view('posts.show',compact('follower'));
+    
+          return view('posts.show',compact('posts'));
     }
 
     /**
