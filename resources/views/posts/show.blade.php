@@ -14,7 +14,7 @@
   box-sizing: border-box;
 }
 img {
-  border-radius: 50%;
+  /* border-radius: 50%; */
 }
 #more  {display:  none;}
 body {
@@ -101,6 +101,7 @@ body {
 /* Add a card effect for articles */
 .card {
   background-image:url("https://images.all-free-download.com/images/graphicthumb/rippled_wall_background_01_hd_pictures_169887.jpg");
+ 
   padding: 20px;
   margin-top: 20px;
 }
@@ -109,7 +110,14 @@ body {
   padding: 20px;
   text-align: center;
   background-image:url("https://images.all-free-download.com/images/graphicthumb/nostalgic_blue_background_03_hd_picture_169784.jpg");
+  
   margin-top: 10px;
+}
+.avatar {
+  vertical-align: middle;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
 }
 
 </style>
@@ -127,18 +135,19 @@ body {
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
       <div class="card">
-        <img src="https://wallpaperboat.com/wp-content/uploads/2019/06/cool-deadpool-14.jpg" alt="Avatar" style="width:200px">
+        <img src="https://wallpaperboat.com/wp-content/uploads/2019/06/cool-deadpool-14.jpg" class="avatar"  alt="Avatar" style="width:200px ">
       </div>
-      <a href="#">Profile</a>
+      <a href="/user">Profile</a>
       <a href="#">Messages</a>
       <a href="#">Requests</a>
       <a href="#">Notifications</a>
       <a href="#">Settings</a>
       <a href="#">Donate us</a>
-      <a href="#">About us</a>
+      {{-- <a href="#">About us</a> --}}
+      <a href="/logout">Logout</a>
     </div>
     <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
-    
+    <span  > <a href="posts/create">Write Something</a> </span>
     <script>
     function openNav() {
       document.getElementById("mySidenav").style.width = "250px";
@@ -176,24 +185,29 @@ body {
   </div>
 
   <div class="row">
-      @foreach($posts as $follo)
-      
+   
+      @foreach($posts as $post)
+    
    
     
 
       <div class="card">
-        <h2>{{$follo->title}}</h2>
+        <h1><a href="post/{{$post->id}}/show">{{$post->title}}</a></h1>
+        {{-- {{$post->userId}}
+        $user=App\User::find($post->userId); --}}
+        {{-- <h5 >By {{$user->name}}</h5> --}}
+      
         {{-- <div class="fakeimg" style="height:200px; width:400px;"></div> --}}
-        @if($follo->cover_images!=null)
-        <img src = "/images/{{$follo->cover_images}}" class="fakeimg" style="height:200px; width:400px;" alt="try" />
+        @if($post->cover_images!=null)
+        <img src = "/images/{{$post->cover_images}}" class="fakeimg" style="height:200px; width:400px;" alt="try" />
         @endif
 
         <p>
             {{-- {{ str_limit($follo->body, 100, '') }} --}}
-            {{ \Illuminate\Support\Str::limit($follo->body, 100, '...') }}
+            {{ \Illuminate\Support\Str::limit($post->body, 100, '...') }}
             {{-- @if (strlen($follo->body) > 100) --}}
                 <span id="dots">...</span>
-                <span id="more">{{ substr($follo->body, 100) }}</span>
+                <span id="more">{{ substr($post->body, 100) }}</span>
             {{-- @endif --}}
         </p>
         
@@ -204,7 +218,7 @@ body {
       </div>
      
       @endforeach
-
+  
       </div>
 
 

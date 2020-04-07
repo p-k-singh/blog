@@ -15,7 +15,8 @@ class PostsController extends Controller
      */
     public function index()
     {
-
+             $id=Auth::id();
+             show($id);
     }
 
     /**
@@ -27,7 +28,7 @@ class PostsController extends Controller
     {
         return view('posts.create');
     }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -56,7 +57,7 @@ class PostsController extends Controller
         }
       
         Post::create($input);
-
+        return redirect('/home');
     }
 
     /**
@@ -65,7 +66,7 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
         $user=User::find(Auth::id());
           $followings=$user->following;//->select('id');
@@ -74,10 +75,14 @@ class PostsController extends Controller
          foreach($followings as $following){
              $arr[]=$following->id;
          }
-
+         $users=array();
         $posts=Post::all()->whereIn('userId',$arr)->sortByDesc('updated_at');
         //return view('posts.show',compact('follower'));
-          return view('posts.show',compact('posts'));
+        foreach($posts as $post)
+        {
+            $users[]=User::find($post->userId);
+        }
+          return view('posts.show',compact('posts','users'));
     }
 
     /**
